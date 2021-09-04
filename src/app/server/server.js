@@ -1,6 +1,8 @@
 var express = require('express');
 var app = express();
 
+var fs = require('fs');
+
 app.use(express.json());
 
 var cors = require('cors');
@@ -14,5 +16,7 @@ var server = http.listen(3000, function(){
 })
 
 app.post('/auth', require('./router/auth'));
+app.post('/adduser', require('./router/adduser'));
+app.post('/deleteuser', require('./router/deleteuser'));
 
 
