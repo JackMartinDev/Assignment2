@@ -20,18 +20,5 @@ module.exports = function(req, res){
                 console.log(users[i]);
                 res.send({"ok": true, "users": users[i]});
             }
-            
     })
-
-
 }
-
-//adding new user
-/*
-var newUser = {"username": "admin", "email": "admin@gmail","id": 1, "role": "superAdmin"};
-        user.push(newUser);
-        fs.writeFile('./users.json', JSON.stringify(users, null, 2), (err) => {
-            if (err) console.log('Error writing file:', err)
-        })
-
-        */

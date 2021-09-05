@@ -16,7 +16,6 @@ const BACKEND_URL = 'http://localhost:3000';
 
 export class LoginComponent implements OnInit {
   userpwd = {username: ""};
-  value = false;
   constructor(private router:Router, private httpClient: HttpClient) {}
 
   public buttonClicked(){
@@ -24,9 +23,13 @@ export class LoginComponent implements OnInit {
     .subscribe({
       next: data => {
         if(data.ok == true){
-          console.log(data.users.userName);
           
           //Add data to local storage
+          localStorage.setItem('username', data.users.username);
+          localStorage.setItem('email', data.users.email);
+          localStorage.setItem('id', data.users.id);
+          localStorage.setItem('role', data.users.role);
+          localStorage.setItem('loggedIn', 'true');
           console.log("LOG IN");
           this.router.navigateByUrl('/chat');
         }else{

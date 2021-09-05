@@ -14,9 +14,10 @@ const BACKEND_URL = 'http://localhost:3000';
   templateUrl: './adduser.component.html',
   styleUrls: ['./adduser.component.css']
 })
+
 export class AdduserComponent implements OnInit {
 
-  userInfo = {username: "", email: "", id: 2, role: ""};
+  userInfo = {username: "", email: ""};
   
   constructor(private router:Router, private httpClient: HttpClient) {}
 
@@ -25,14 +26,9 @@ export class AdduserComponent implements OnInit {
     .subscribe({
       next: data => {
         if(data.ok == true){
-          var id = Number(sessionStorage.getItem("idCount"));
-          var x = id + 1;
-          var y = x.toString();
-          sessionStorage.setItem("idCount", y);
-          this.userInfo.id = x;
-          //this.router.navigateByUrl('/chat');
+          this.router.navigateByUrl('/chat');
         }else{
-          alert("Error");
+          alert("User Already exists");
         }
     },
     error: error => {
@@ -41,7 +37,7 @@ export class AdduserComponent implements OnInit {
   });
   }
   ngOnInit(){
-    sessionStorage.setItem("idCount", "2");
+    
   }
 
 }
