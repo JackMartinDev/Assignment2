@@ -27,6 +27,7 @@ export class AppComponent implements OnInit{
         }
       });
     }
+    //Change button names/ add different buttons for different permissions
   buttonClicked(){
     var userRole = localStorage.getItem('role');
     if(userRole != 'superAdmin'){
@@ -45,8 +46,6 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit() {
-    localStorage.setItem('loggedIn', 'false');
-    localStorage.setItem("idCount", "2");
   }
 }
 

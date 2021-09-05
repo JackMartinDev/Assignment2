@@ -18,5 +18,6 @@ var server = http.listen(3000, function(){
 app.post('/auth', require('./router/auth'));
 app.post('/adduser', require('./router/adduser'));
 app.post('/deleteuser', require('./router/deleteuser'));
+app.post('/updateuser', require('./router/updateuser'));
 
 

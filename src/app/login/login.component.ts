@@ -29,6 +29,7 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('email', data.users.email);
           localStorage.setItem('id', data.users.id);
           localStorage.setItem('role', data.users.role);
+          
           localStorage.setItem('loggedIn', 'true');
           console.log("LOG IN");
           this.router.navigateByUrl('/chat');
