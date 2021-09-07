@@ -1,0 +1,8 @@
+[
+    {
+      "groupname": "Group1",
+      "users": ["admin","jack"],
+      "groupassist": [],
+      "channels": ["channel_1", "channel_2"]
+    }
+  ]
