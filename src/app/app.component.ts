@@ -49,10 +49,11 @@ export class AppComponent implements OnInit{
     localStorage.removeItem('id');
     localStorage.removeItem('role');
     localStorage.setItem('loggedIn', 'false');
-    
+    this.router.navigateByUrl('/login');
   }
 
   ngOnInit() {
+
   }
 }
 

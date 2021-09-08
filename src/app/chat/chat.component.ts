@@ -50,6 +50,22 @@ export class ChatComponent implements OnInit {
   });
   }
 
+  removeGroup(){
+    this.httpClient.post<any>(BACKEND_URL + '/fetchgroups', [this.y, "removeGroup"], httpOptions)
+    .subscribe({
+      next: data => {
+        if(data.ok == true){
+          window.location.reload();
+        }else{
+          alert("Group does not exist");
+        }
+    },
+    error: error => {
+        console.error('There was an error!');
+    }
+  });
+  }
+
   addUserToGroup(){
     this.httpClient.post<any>(BACKEND_URL + '/fetchgroups', [this.x, "add"], httpOptions)
     .subscribe({
@@ -57,10 +73,10 @@ export class ChatComponent implements OnInit {
         if(data.ok == true){
           window.location.reload();
         }else{
-          if(data.reason == "User does not exist"){
-            alert("User does not exist");
-          }else if(data.reason == "User already exists"){
-            alert("User already exists");
+            if(data.reason == "User already exists in group"){
+            alert("User already exists in group");
+          }else if (data.reason == "Group does not exist"){
+            alert("Group does not exist");
           }
         }
     },

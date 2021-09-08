@@ -36,6 +36,27 @@ var bool = false;
         })
     }
     //
+    else if(check == 'removeGroup'){
+        fs.readFile('./groups.json','utf8', (err, jsonString) => {
+            if (err) {
+                console.log("File read failed:", err)
+                return
+            }
+            var groups = JSON.parse(jsonString);
+            let i = groups.findIndex(group =>
+            (data == group.name));
+            if(i == -1){
+                res.send({"ok":false});
+            }else{
+                groups.splice(i,1);
+                fs.writeFile('./groups.json', JSON.stringify(groups, null, 2), (err) => {
+                    if (err) console.log('Error writing file:', err)
+                })
+                res.send({"ok":true, "groups": groups});
+            }
+        })
+    }
+    //
     else if(check == "add"){
         fs.readFile('./groups.json','utf8', (err, jsonString) => {
             if (err) {
@@ -46,6 +67,7 @@ var bool = false;
             let i = groups.findIndex(group =>
             (data.name == group.name));
             if(i == -1){
+                res.send({"ok": false, "reason": "Group does not exist"});
             }else{
                 let j = groups[i].users.findIndex(user =>
                     (data.user == user));
@@ -59,7 +81,7 @@ var bool = false;
                         res.send({"ok":true, "groups": groups});
                         
                     }else{
-                        res.send({"ok":false});
+                        res.send({"ok":false, "reason": "User already exists in group"});
                     }
             }
         })
