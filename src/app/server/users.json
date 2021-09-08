@@ -7,6 +7,12 @@
   },
   {
     "username": "jack",
+    "email": "jackmartin1337@gmail.com",
+    "id": 4,
+    "role": "user"
+  },
+  {
+    "username": "chloe",
     "email": "jack@gmail.com",
     "id": 2,
     "role": "superAdmin"

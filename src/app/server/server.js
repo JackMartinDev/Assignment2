@@ -19,5 +19,6 @@ app.post('/auth', require('./router/auth'));
 app.post('/adduser', require('./router/adduser'));
 app.post('/deleteuser', require('./router/deleteuser'));
 app.post('/updateuser', require('./router/updateuser'));
+app.post('/fetchgroups', require('./router/fetchgroups'));
 
 

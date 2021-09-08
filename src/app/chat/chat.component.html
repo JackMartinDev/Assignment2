@@ -1,1 +1,24 @@
-<p>chat works!</p>
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+      <body>
+        <div *ngFor="let group of group">
+            Group Name: {{group.name}}<br> Group Members: {{group.users}}<br> Group Assistants: {{group.groupassist}}<br> Group Channels: {{group.channels}}<br><br>
+        </div>
+        <div *ngIf="Admin"><form>
+            <input type="text" [(ngModel)]="y" name= "y" placeholder="Group Name"><br>
+            <button (click)="createGroup()">Create Group</button>
+          </form></div>
+          <br>
+          <div *ngIf="Admin"><form>
+            <input type="text" [(ngModel)]="x.user" name= "user" placeholder="User">
+            <button (click)="addUserToGroup()">Add user to group</button><br>
+            <input type="text" [(ngModel)]="x.name" name= "name" placeholder="Group Name">
+            <button (click)="removeUserFromGroup()">Remove User from group</button><br>
+            
+          </form></div>
+          <p></p>
+      </body>
+    </div>
+  </div>
+
+

@@ -1,8 +1,29 @@
 [
-    {
-      "groupname": "Group1",
-      "users": ["admin","jack"],
-      "groupassist": [],
-      "channels": ["channel_1", "channel_2"]
-    }
-  ]
+  {
+    "name": "Group1",
+    "users": [
+      "admin"
+    ],
+    "groupassist": [],
+    "channels": [
+      "channel_1",
+      "channel_2"
+    ]
+  },
+  {
+    "name": "Jack's Group",
+    "users": [
+      "admin"
+    ],
+    "groupassist": [],
+    "channels": []
+  },
+  {
+    "name": "Jack",
+    "users": [
+      "admin"
+    ],
+    "groupassist": [],
+    "channels": []
+  }
+]

@@ -1,5 +1,3 @@
-//const User = require('../code/user.js');
-
 var fs = require('fs');
 
 module.exports = function(req, res){

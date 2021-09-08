@@ -2,12 +2,12 @@
   <div class="container-fluid">
     <ul class="nav navbar-nav">
       <li> <a class="nav-link" routerLink="/">Home</a></li>
-      <div *ngIf="LoggedOut; else elseBlock"><li> <a class="nav-link" routerLink="/login">Login</a></li></div>
-        <ng-template #elseBlock><li><a class="nav-link" routerLink="/" (click)="logOut()">Logout</a></li></ng-template>
-      <li> <a class="nav-link" routerLink="/chat">Chat</a></li>
-      <li> <a class="nav-link" routerLink="/adduser" (click)="buttonClicked()">Add User</a></li>
-      <li> <a class="nav-link" routerLink="/deleteuser" (click)="buttonClicked()">Delete User</a></li>
-      <li> <a class="nav-link" routerLink="/upgradeuser" (click)="buttonClicked()">Upgrade User</a></li>
+      <div *ngIf="LoggedIn; else elseBlock"><li><a class="nav-link" routerLink="/" (click)="logOut()">Logout</a></li></div>
+        <ng-template #elseBlock><li> <a class="nav-link" routerLink="/login">Login</a></li></ng-template>
+      <div *ngIf="LoggedIn"><li> <a class="nav-link" routerLink="/chat">Chat</a></li></div>
+      <div *ngIf="Admin"><li> <a class="nav-link" routerLink="/adduser" (click)="buttonClicked()">Add User</a></li></div>
+      <div *ngIf="Admin"><li> <a class="nav-link" routerLink="/deleteuser" (click)="buttonClicked()">Delete User</a></li></div>
+      <div *ngIf="Admin"><li> <a class="nav-link" routerLink="/upgradeuser" (click)="buttonClicked()">Upgrade User</a></li></div>
     </ul>
   </div>
  </nav>
