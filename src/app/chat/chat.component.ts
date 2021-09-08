@@ -20,19 +20,16 @@ export class ChatComponent implements OnInit {
     "users": [],
     "groupassist": [],
     "channels": []
-  }];
+  }]; //object used to display the groups on the view
 
-  y = "";
+  y = ""; //group name bound variable
 
-  x = {
-    "name": "",
-    "user": ""
-  };
+  x = {"name": "","user": ""};  //bound variable for adding and removing groups
 
   Admin = false;
+  GroupAdmin = false;
 
   constructor(private router:Router, private httpClient: HttpClient) {}
-
 
   createGroup(){
     this.httpClient.post<any>(BACKEND_URL + '/fetchgroups', [this.y, "create"], httpOptions)
@@ -100,14 +97,15 @@ export class ChatComponent implements OnInit {
   });
   }
 
-
+//On load check priviledges and fetch group data from the server
   ngOnInit() {
-    if(localStorage.getItem('role') == 'superAdmin'){
+    if(localStorage.getItem('role') == 'superAdmin' || localStorage.getItem('role') == 'groupAdmin'){
       this.Admin = true;
     }
-    if(localStorage.getItem('role') != 'superAdmin'){
+    if(localStorage.getItem('role') != 'superAdmin' && localStorage.getItem('role') == 'superAdmin'){
       this.Admin = false;
     }
+
     this.httpClient.post<any>(BACKEND_URL + '/fetchgroups', [this.group,"fetch"], httpOptions)
     .subscribe({
       next: data => {
@@ -115,15 +113,11 @@ export class ChatComponent implements OnInit {
           for(let i = 0; i < data.groups.length; i++){
            this.group[i] = data.groups[i];
           }
-          
-          
         }
-        
     },
     error: error => {
         console.error('There was an error!');
     }
   });
   }
-
 }

@@ -8,7 +8,6 @@ const httpOptions = {
 
 const BACKEND_URL = 'http://localhost:3000';
 
-
 @Component({
   selector: 'app-adduser',
   templateUrl: './adduser.component.html',
@@ -36,8 +35,6 @@ export class AdduserComponent implements OnInit {
     }
   });
   }
-  ngOnInit(){
-    
-  }
+  ngOnInit(){ }
 
 }

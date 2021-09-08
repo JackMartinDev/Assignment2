@@ -8,7 +8,6 @@ const httpOptions = {
 
 const BACKEND_URL = 'http://localhost:3000';
 
-
 @Component({
   selector: 'app-deleteuser',
   templateUrl: './deleteuser.component.html',
@@ -26,7 +25,6 @@ export class DeleteuserComponent implements OnInit {
       next: data => {
         if(data.ok == true){
           alert("User Deleted");
-          //this.router.navigateByUrl('/chat');
         }else{
           alert("User does not exist");
         }

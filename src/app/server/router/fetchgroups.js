@@ -1,9 +1,12 @@
+//This route is responsible for dealing with all group related requests
+
 var fs = require('fs');
 
 module.exports = function(req,res){
-    var check = req.body[1];
-    var data = req.body[0];
-var bool = false;
+    var check = req.body[1];    //check variable determines which statement gets run
+    var data = req.body[0];     //user data
+
+    //return all group data to the client
     if(check == 'fetch'){
     fs.readFile('./groups.json','utf8', (err, jsonString) => {
         if (err) {
@@ -13,7 +16,7 @@ var bool = false;
         groups = JSON.parse(jsonString);
         res.send({"ok": true, "groups": groups});
     })}
-    //
+    //Create a new server based on the data sent from the client
     else if(check == 'create'){
         fs.readFile('./groups.json','utf8', (err, jsonString) => {
             if (err) {
@@ -35,7 +38,7 @@ var bool = false;
             }
         })
     }
-    //
+    //Remove a group
     else if(check == 'removeGroup'){
         fs.readFile('./groups.json','utf8', (err, jsonString) => {
             if (err) {
@@ -56,7 +59,7 @@ var bool = false;
             }
         })
     }
-    //
+    //Add user to a group
     else if(check == "add"){
         fs.readFile('./groups.json','utf8', (err, jsonString) => {
             if (err) {
@@ -74,7 +77,7 @@ var bool = false;
                     if(j == -1){
                         var users1 = groups[i].users;
                         users1.push(data.user);
-                        console.log(groups[i].users);
+                        //console.log(groups[i].users);
                         fs.writeFile('./groups.json', JSON.stringify(groups, null, 2), (err) => {
                             if (err) console.log('Error writing file:', err)
                         })
@@ -86,6 +89,7 @@ var bool = false;
             }
         })
     }
+    //Remove user from a group
     else if(check == "remove"){
         fs.readFile('./groups.json','utf8', (err, jsonString) => {
             if (err) {
@@ -106,7 +110,7 @@ var bool = false;
                     console.log("Hello");
                 var users1 = groups[i].users;
                 users1.splice(j,1);
-                console.log(groups[i].users);
+                //console.log(groups[i].users);
                 fs.writeFile('./groups.json', JSON.stringify(groups, null, 2), (err) => {
                     if (err) console.log('Error writing file:', err)
                 })

@@ -1,5 +1,7 @@
+//This route is responsible for adding new users
+
 var fs = require('fs');
-var idCount = 2;
+var idCount = 2;    //initial count to keep track of user id
 
 module.exports = function(req, res){
     var u = req.body.username;

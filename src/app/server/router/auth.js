@@ -1,3 +1,5 @@
+//This route is responsible for authenticating the login user information
+
 var fs = require('fs');
 
 module.exports = function(req, res){
@@ -15,7 +17,7 @@ module.exports = function(req, res){
                 res.send({"ok":false});
             }
             else{
-                console.log(users[i]);
+                //console.log(users[i]);
                 res.send({"ok": true, "users": users[i]});
             }
     })

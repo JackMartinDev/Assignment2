@@ -4,11 +4,5 @@
     "email": "admin@gmail",
     "id": 1,
     "role": "superAdmin"
-  },
-  {
-    "username": "jack",
-    "email": "jackmartin1337@gmail.com",
-    "id": 3,
-    "role": "superAdmin"
   }
 ]

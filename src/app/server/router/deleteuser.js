@@ -1,3 +1,5 @@
+//This route is responsible for deleting users
+
 var fs = require('fs');
 
 module.exports = function(req, res){

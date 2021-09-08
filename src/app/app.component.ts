@@ -29,11 +29,11 @@ export class AppComponent implements OnInit{
           if(localStorage.getItem('role') != 'superAdmin'){
             this.Admin = false;
           }
-          console.log("Hello"); //Function that you want to call
         }
       });
     }
-    //Change button names/ add different buttons for different permissions
+    
+  //Disallow button press unless admin
   buttonClicked(){
     var userRole = localStorage.getItem('role');
     if(userRole != 'superAdmin'){
@@ -42,6 +42,7 @@ export class AppComponent implements OnInit{
     }
   }
 
+  //Logout and clear all local storage
   logOut(){
     this.LoggedIn = false;
     localStorage.removeItem('username');

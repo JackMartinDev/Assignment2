@@ -29,25 +29,19 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('email', data.users.email);
           localStorage.setItem('id', data.users.id);
           localStorage.setItem('role', data.users.role);
-          
           localStorage.setItem('loggedIn', 'true');
-          console.log("LOG IN");
+
           this.router.navigateByUrl('/chat');
         }else{
           alert("Incorrect login");
         }
-        
     },
     error: error => {
         console.error('There was an error!');
     }
   });
-
-  
   }
 
-  ngOnInit(): void {
-   
-  }
+  ngOnInit(): void { }
 
 }

@@ -1,3 +1,5 @@
+//This route is responsible for updating the roles of a user
+
 var fs = require('fs');
 
 module.exports = function(req, res){
