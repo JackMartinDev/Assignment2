@@ -22,7 +22,7 @@ module.exports = function(req, res){
                     if (err) console.log('Error writing file:', err)
                 })
                 idCount =  idCount + 1;
-                console.log(idCount);
+                //console.log(idCount);
                 res.send({"ok":true, "users": users[i]});
             }
             else{
