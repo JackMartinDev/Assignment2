@@ -25,10 +25,9 @@ export class LoginComponent implements OnInit {
         if(data.ok == true){
           
           //Add data to local storage
-          localStorage.setItem('username', data.users.username);
-          localStorage.setItem('email', data.users.email);
-          localStorage.setItem('id', data.users.id);
-          localStorage.setItem('role', data.users.role);
+          localStorage.setItem('username', data.user.Username);
+          //localStorage.setItem('email', data.users.email);
+          localStorage.setItem('role', data.user.Role);
           localStorage.setItem('loggedIn', 'true');
 
           this.router.navigateByUrl('/chat');

@@ -1,27 +1,17 @@
 //This route is responsible for deleting users
 
-var fs = require('fs');
-
-module.exports = function(req, res){
-    var u = req.body.username;
-
-    fs.readFile('./users.json','utf8', (err, jsonString) => {
-        if (err) {
-            console.log("File read failed:", err)
-            res.send({"ok":false});
+module.exports =  function(db,app){
+    app.post('/deleteuser',function(req,res){
+        if(!req.body){
+            return res.sendStatus(400);
         }
-        var users = JSON.parse(jsonString);
-        let i = users.findIndex(user =>
-            (u == user.username));
-            if(i == -1){
-                res.send({"ok":false});
-            }
-            else{
-                x = users.splice(i,1);
-                fs.writeFile('./users.json', JSON.stringify(users, null, 2), (err) => {
-                if (err) console.log('Error writing file:', err)
-                })
-                res.send({"ok":true});
-            }
+
+        userName =req.body.username;
+        const collection = db.collection('Users');
+
+        //maybe make it so logged in user cant be deleted idk
+        collection.deleteOne({Username:userName},(err,dbres)=>{
+            res.send({"ok": true});
+        });
     })
 }

@@ -1,32 +1,24 @@
 //This route is responsible for adding new users
 
-var fs = require('fs');
-var idCount = 2;    //initial count to keep track of user id
-
-module.exports = function(req, res){
-    var u = req.body.username;
-    var e = req.body.email;
-
-    fs.readFile('./users.json','utf8', (err, jsonString) => {
-        if (err) {
-            console.log("File read failed:", err)
-            res.send({"ok":false});
+module.exports =  function(db,app){
+    app.post('/adduser',function(req,res){
+        if(!req.body){
+            return res.sendStatus(400);
         }
-        var users = JSON.parse(jsonString);
-            let i = users.findIndex(user =>
-            (u == user.username));
-            if(i == -1){
-                var newUser = {"username": u, "email": e,"id": idCount, "role": 'user'};
-                users.push(newUser);
-                fs.writeFile('./users.json', JSON.stringify(users, null, 2), (err) => {
-                    if (err) console.log('Error writing file:', err)
+
+        userName = req.body.username;
+        email = req.body.email;
+
+        const collection = db.collection('Users');
+
+        collection.find({'Username': userName}).count((err,count)=>{
+            if (count == 0){
+                collection.insertOne({Username: userName, Email: email, Role: "user"},(err,dbres)=>{
+                    res.send({"ok": true});
                 })
-                idCount =  idCount + 1;
-                //console.log(idCount);
-                res.send({"ok":true, "users": users[i]});
+            }else{
+                res.send({"ok":false});
             }
-            else{
-                res.send({"ok": false});
-            }
+        })
     })
 }

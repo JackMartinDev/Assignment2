@@ -1,24 +1,23 @@
 //This route is responsible for authenticating the login user information
 
-var fs = require('fs');
-
-module.exports = function(req, res){
-    var u = req.body.username;
-
-    fs.readFile('./users.json','utf8', (err, jsonString) => {
-        if (err) {
-            console.log("File read failed:", err)
-            return
+module.exports =  function(db,app){
+    app.post('/auth',function(req,res){
+        if(!req.body){
+            return res.sendStatus(400);
         }
-        var users = JSON.parse(jsonString);
-        let i = users.findIndex(user =>
-            (u == user.username));
-            if(i == -1){
+
+        userName = req.body.username;
+
+        const collection = db.collection('Users');
+
+        collection.find({'Username': userName}).count((err,count)=>{
+            if (count != 0){
+                collection.find({'Username': userName}).toArray((err,data)=>{
+                    res.send({"ok":true, "user":data[0]});
+                });
+            }else{
                 res.send({"ok":false});
             }
-            else{
-                //console.log(users[i]);
-                res.send({"ok": true, "users": users[i]});
-            }
+        })
     })
 }
