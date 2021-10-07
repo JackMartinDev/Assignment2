@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
+import { SocketService } from '../services/socket.service';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 
 const httpOptions = {
@@ -15,109 +16,74 @@ const BACKEND_URL = 'http://localhost:3000';
 })
 
 export class ChatComponent implements OnInit {
-  group = [{
-    "name": "",
-    "users": [],
-    "groupassist": [],
-    "channels": []
-  }]; //object used to display the groups on the view
+  private socket;
+  messageContent:string="";
+  messages:string[] = [];
+  rooms = [];
+  selectedRoom:string = "";
+  roomNotice:string = "";
+  currentRoom:string = "";
+  isInRoom = false;
+  newRoom:string = "";
+  userCount:number = 0;
 
-  y = ""; //group name bound variable
+  constructor(private socketService:SocketService) {}
 
-  x = {"name": "","user": ""};  //bound variable for adding and removing groups
-
-  Admin = false;
-  GroupAdmin = false;
-
-  constructor(private router:Router, private httpClient: HttpClient) {}
-
-  createGroup(){
-    this.httpClient.post<any>(BACKEND_URL + '/fetchgroups', [this.y, "create"], httpOptions)
-    .subscribe({
-      next: data => {
-        if(data.ok == true){
-          window.location.reload();
-        }else{
-          alert("Group already exists");
-        }
-    },
-    error: error => {
-        console.error('There was an error!');
-    }
-  });
-  }
-
-  removeGroup(){
-    this.httpClient.post<any>(BACKEND_URL + '/fetchgroups', [this.y, "removeGroup"], httpOptions)
-    .subscribe({
-      next: data => {
-        if(data.ok == true){
-          window.location.reload();
-        }else{
-          alert("Group does not exist");
-        }
-    },
-    error: error => {
-        console.error('There was an error!');
-    }
-  });
-  }
-
-  addUserToGroup(){
-    this.httpClient.post<any>(BACKEND_URL + '/fetchgroups', [this.x, "add"], httpOptions)
-    .subscribe({
-      next: data => {
-        if(data.ok == true){
-          window.location.reload();
-        }else{
-            if(data.reason == "User already exists in group"){
-            alert("User already exists in group");
-          }else if (data.reason == "Group does not exist"){
-            alert("Group does not exist");
-          }
-        }
-    },
-    error: error => {
-        console.error('There was an error!');
-    }
-  });
-  }
-
-  removeUserFromGroup(){
-    this.httpClient.post<any>(BACKEND_URL + '/fetchgroups', [this.x, "remove"], httpOptions)
-    .subscribe({
-      next: data => {
-        if(data.ok == true){
-          window.location.reload();
-        }
-    },
-    error: error => {
-        console.error('There was an error!');
-    }
-  });
-  }
 
 //On load check priviledges and fetch group data from the server
   ngOnInit() {
-    if(localStorage.getItem('role') == 'superAdmin' || localStorage.getItem('role') == 'groupAdmin'){
-      this.Admin = true;
-    }
-    if(localStorage.getItem('role') != 'superAdmin' && localStorage.getItem('role') == 'superAdmin'){
-      this.Admin = false;
-    }
-
-    this.httpClient.post<any>(BACKEND_URL + '/fetchgroups', [this.group,"fetch"], httpOptions)
-    .subscribe({
-      next: data => {
-        if(data.ok == true){
-          for(let i = 0; i < data.groups.length; i++){
-           this.group[i] = data.groups[i];
-          }
-        }
-    },
-    error: error => {
-        console.error('There was an error!');
+    this.socketService.initSocket();
+    this.socketService.get_message((m)=>{this.messages.push(m)});
+    this.socketService.req_room_list();
+    this.socketService.get_room_list((msg)=>{this.rooms =  JSON.parse(msg)});
+    this.socketService.notice((msg)=>{this.roomNotice = msg});
+    this.socketService.joined((msg)=>{this.currentRoom = msg
+    if(this.currentRoom !=""){
+      this.isInRoom = true;
+    }else{
+      this.isInRoom = false;
     }
   });
+}
+
+  join_room(){
+    this.socketService.join_room(this.selectedRoom);
+    this.socketService.req_current_users(this.selectedRoom);
+    this.socketService.get_current_users((res)=>{this.userCount = res});
   }
+  
+  clear_notice(){
+    this.roomNotice = "";
+  }
+
+  leave_room(){
+    this.socketService.leave_room(this.currentRoom);
+    this.socketService.req_current_users(this.currentRoom);
+    this.socketService.get_current_users((res)=>{this.userCount = res});
+    this.selectedRoom = null;
+    this.currentRoom = "";
+    this.isInRoom = false;
+    this.userCount = 0;
+    this.roomNotice = "";
+    this.messages = [];
+  }
+  
+  create_room(){
+    console.log(this.create_room);
+    this.socketService.create_room(this.newRoom);
+    this.socketService.req_room_list();
+    this.newRoom = "";
+    
+  }
+
+  chat(messageContent){
+    if(messageContent){
+      console.log(messageContent);
+      this.socketService.send_message(messageContent);
+      this.messageContent = null;
+    }else{
+      console.log("no message");
+    }
+  }
+
 }

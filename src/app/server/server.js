@@ -3,11 +3,22 @@ const app = express();
 const http = require('http').Server(app);
 const cors = require('cors');
 const MongoClient = require('mongodb').MongoClient;
+const io = require('socket.io')(http,{
+    cors:{
+    origin:"http://localhost:4200",
+    methods: ["GET","POST"],
+    credentials: true,
+    allowEIO3: true
+    },
+    transport: ['websocket']
+    });
+const sockets = require('./socket.js');
 var ObjectID = require('mongodb').ObjectId;
 
 app.use(cors());
 app.use(express.json());
 const url = 'mongodb://localhost:27017';
+sockets.connect(io, 3000);
 
 MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true},function(err,client){
     if (err){
