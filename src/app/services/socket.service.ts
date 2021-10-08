@@ -16,6 +16,7 @@ constructor() {}
 
 public initSocket():void{
     this.socket = io(SERVER_URL);
+    this.socket.emit("start");
 }
 
 public join_room(room):void{
@@ -60,5 +61,9 @@ public send_message(message:string):void{
 
 public get_message(next){
     this.socket.on('message', (message) =>next(message))
+}
+
+public add_user(room, user){
+    this.socket.emit('addUser',room,user);
 }
 }

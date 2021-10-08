@@ -28,4 +28,21 @@
   <ul>
     <li *ngFor="let message of messages">{{message}}</li>
   </ul>
+
+  <select [(ngModel)] = "selectedRoomAdd" name="selectedRoomAdd">
+    <option [ngValue]="null">Select Room</option>
+    <option *ngFor="let room of rooms">
+      {{room}}
+    </option>
+  </select><br><br>
+
+  <select [(ngModel)] = "selectedUserAdd" name="selectedUserAdd">
+    <option [ngValue]="null">Select User</option>
+    <option *ngFor="let user of users">
+      {{user}}
+    </option>
+  </select><br><br>
+  <div class = "form-group">
+    <button (click) = "add_user(selectedRoomAdd,selectedUserAdd)" class = "btn btn-primary">Add User to group</button>
+  </div>
 </div>

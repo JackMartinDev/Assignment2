@@ -26,6 +26,9 @@ export class ChatComponent implements OnInit {
   isInRoom = false;
   newRoom:string = "";
   userCount:number = 0;
+  users = ["Jack", "Dylan"];
+  selectedRoomAdd:string = "";
+  selectedUserAdd:string = "";
 
   constructor(private socketService:SocketService) {}
 
@@ -69,11 +72,9 @@ export class ChatComponent implements OnInit {
   }
   
   create_room(){
-    console.log(this.create_room);
     this.socketService.create_room(this.newRoom);
     this.socketService.req_room_list();
     this.newRoom = "";
-    
   }
 
   chat(messageContent){
@@ -84,6 +85,10 @@ export class ChatComponent implements OnInit {
     }else{
       console.log("no message");
     }
+  }
+
+  add_user(selectedRoomAdd,selectedUserAdd){
+    this.socketService.add_user(selectedRoomAdd,selectedUserAdd);
   }
 
 }

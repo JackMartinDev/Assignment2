@@ -1,114 +1,150 @@
 module.exports = {
     connect: function(io, PORT){
         //read the DB for rooms
-        var rooms = ["room1", "room2"];
-        var socketRoom = [];
-        var socketRoomNum = [];
+        const MongoClient = require('mongodb').MongoClient;
+        const url = 'mongodb://localhost:27017';
 
-        const chat = io.of('/chat');
+        MongoClient.connect(url,function(err,client){
+            if (err){
+                return console.log(err)
+            }
+            const dbName = 'DB';
+            const db = client.db(dbName);
 
-        chat.on('connection',(socket)=>{
+            const collection = db.collection('Groups');
 
-            console.log("YES");
-            socket.on('message',(message)=>{
-                console.log("message");
-                for(i=0;i<socketRoom.length;i++){
-                    if(socketRoom[i][0] == socket.id){
-                        console.log("message2");
-                        chat.to(socketRoom[i][1]).emit('message',message);
-                    }
-                }
-            })
-            
-            socket.on('newRoom',(newRoom)=>{
-                if(rooms.indexOf(newRoom) == -1){
-                    rooms.push(newRoom);
-                    chat.emit('roomList', JSON.stringify(rooms));
-                }
-            });
+            var rooms = [];
+            var socketRoom = [];
+            var socketRoomNum = [];
 
-            socket.on('roomList',(m)=>{
-                chat.emit('roomList',JSON.stringify(rooms))
-            });
+            const chat = io.of('/chat');
 
-            socket.on('currentUsers',(room)=>{
-                var user_count = 0;
+            chat.on('connection',(socket)=>{
 
-                for(i=0;i<socketRoomNum.length;i++){
-                    if(socketRoomNum[i][0]==room){
-                        user_count = socketRoomNum[i][1];
-                    }
-                }
-                chat.in(room).emit('currentUsers',user_count);
-            });
-
-            socket.on('joinRoom',(room)=>{
-                if(rooms.includes(room)){
-                    socket.join(room);
-                        
-                        var in_room_socket_array = false;
-
-                        for(i=0; i<socketRoom.length;i++){
-                            if(socketRoom[i][0] == socket.id){
-                                socketRoom[i][1] = room;
-                                inroom = true;
-                            }
+                socket.on('start',(m)=>{
+                    collection.find().toArray((err,data)=>{
+                        for(let i =0; i<data.length;i++){
+                            rooms[i] = data[i].GroupName;
                         }
-                        
-                        if(in_room_socket_array == false){
-                            socketRoom.push([socket.id, room]);
-                            var has_room_number = false;
+                        console.log(rooms);
+                    });
+                });
 
-                            for(let j=0; j<socketRoomNum.length;j++){
-                                if(socketRoomNum[j][0] == room){
-                                    socketRoomNum[j][1] =  socketRoomNum[j][1]+1;
-                                    has_room_number = true;
+                socket.on('message',(message)=>{
+                    for(i=0;i<socketRoom.length;i++){
+                        if(socketRoom[i][0] == socket.id){
+                            chat.to(socketRoom[i][1]).emit('message',message);
+                        }
+                    }
+                })
+                
+                socket.on('newRoom',(newRoom)=>{
+                    if(rooms.indexOf(newRoom) == -1){
+                        rooms.push(newRoom);
+                        chat.emit('roomList', JSON.stringify(rooms));
+                        collection.insertOne({GroupName: newRoom, GroupMembers: [], GroupAdmins: ["Admin"]});
+                    }
+                });
+
+                socket.on('roomList',(m)=>{
+                    chat.emit('roomList',JSON.stringify(rooms))
+                });
+
+                socket.on('currentUsers',(room)=>{
+                    var user_count = 0;
+
+                    for(i=0;i<socketRoomNum.length;i++){
+                        if(socketRoomNum[i][0]==room){
+                            user_count = socketRoomNum[i][1];
+                        }
+                    }
+                    chat.in(room).emit('currentUsers',user_count);
+                });
+
+                socket.on('joinRoom',(room)=>{
+                    if(rooms.includes(room)){
+                        socket.join(room);
+                            
+                            var in_room_socket_array = false;
+
+                            for(i=0; i<socketRoom.length;i++){
+                                if(socketRoom[i][0] == socket.id){
+                                    socketRoom[i][1] = room;
+                                    inroom = true;
                                 }
                             }
-                            if(has_room_number == false){
-                                socketRoomNum.push([room,1]);
+                            
+                            if(in_room_socket_array == false){
+                                socketRoom.push([socket.id, room]);
+                                var has_room_number = false;
+
+                                for(let j=0; j<socketRoomNum.length;j++){
+                                    if(socketRoomNum[j][0] == room){
+                                        socketRoomNum[j][1] =  socketRoomNum[j][1]+1;
+                                        has_room_number = true;
+                                    }
+                                }
+                                if(has_room_number == false){
+                                    socketRoomNum.push([room,1]);
+                                }
+
                             }
-
-                        }
-                        chat.in(room).emit("notice", "A new user has joined the chat");
-                    
-                    chat.in(room).emit("joined",room);
-                }
-            });
-
-            socket.on("leaveRoom",(room)=>{
-                for(let i=0; i<socketRoom.length;i++){
-                    if(socketRoom[i][0] == socket.id){
-                        socketRoom.splice(i,1);
-                        socket.leave(room);
-                        chat.to(room).emit("notice", "A user has left the chat");
+                            chat.in(room).emit("notice", "A new user has joined the chat");
+                        
+                        chat.in(room).emit("joined",room);
                     }
-                }
+                });
 
-                for(j=0; j<socketRoomNum.length;j++){
-                    if(socketRoomNum[j][0]== room){
-                        socketRoomNum[j][1] = socketRoomNum[j][1] - 1;
-                        if(socketRoomNum[j][1]==0){
-                            socketRoomNum.splice(j,1);
+                socket.on("leaveRoom",(room)=>{
+                    for(let i=0; i<socketRoom.length;i++){
+                        if(socketRoom[i][0] == socket.id){
+                            socketRoom.splice(i,1);
+                            socket.leave(room);
+                            chat.to(room).emit("notice", "A user has left the chat");
                         }
                     }
-                }
+
+                    for(j=0; j<socketRoomNum.length;j++){
+                        if(socketRoomNum[j][0]== room){
+                            socketRoomNum[j][1] = socketRoomNum[j][1] - 1;
+                            if(socketRoomNum[j][1]==0){
+                                socketRoomNum.splice(j,1);
+                            }
+                        }
+                    }
+                });
+
+                socket.on('addUser',(room, user)=>{
+                    collection.find({GroupName:room}).toArray((err,data)=>{
+                        var current_users = data[0].GroupMembers;
+                        console.log(current_users);
+                        current_users.push(user);
+                        console.log(current_users);
+                        collection.updateOne({GroupName: room}, {$set:{GroupMembers: current_users}})
+
+                    });
+                    collection.updateOne({GroupName: room}, {$set:{GroupMembers: [user]}},(err,dbres)=>{
+                        console.log("done");
+                    })
+                });
+
+                socket.on('disconnect',()=>{
+                    socket.disconnect()
+                    for(let i=0; i<socketRoom.length;i++){
+                        if(socketRoom[i][0] == socket.id){
+                            socketRoom.splice(i,1);
+                        }
+                    }
+                    for(let j=0;j<socketRoomNum.length; j++){
+                        if(socketRoomNum[j][0] == socket.room){
+                            socketRoomNum[j[1] = socketRoomNum[j][1] - 1];
+                        }
+                    }
+                    console.log("Disconnected");
+                });
             });
 
-            socket.on('disconnect',()=>{
-                socket.disconnect()
-                for(let i=0; i<socketRoom.length;i++){
-                    if(socketRoom[i][0] == socket.id){
-                        socketRoom.splice(i,1);
-                    }
-                }
-                for(let j=0;j<socketRoomNum.length; j++){
-                    if(socketRoomNum[j][0] == socket.room){
-                        socketRoomNum[j[1] = socketRoomNum[j][1] - 1];
-                    }
-                }
-                console.log("Disconnected");
-            });
-        });
+            })
+
     }
 }
