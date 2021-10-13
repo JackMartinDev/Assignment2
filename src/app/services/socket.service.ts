@@ -11,12 +11,13 @@ const SERVER_URL = 'http://localhost:3000/chat';
 export class SocketService{
 
 private socket;
-
+logged_in_user = localStorage.getItem('username');
+user_role = localStorage.getItem('role');
 constructor() {}
 
 public initSocket():void{
     this.socket = io(SERVER_URL);
-    this.socket.emit("start");
+    this.socket.emit("start", this.logged_in_user, this.user_role);
 }
 
 public join_room(room):void{
@@ -65,5 +66,13 @@ public get_message(next){
 
 public add_user(room, user){
     this.socket.emit('addUser',room,user);
+}
+
+public req_user_list(){
+    this.socket.emit("userList", 'list please');
+}
+
+public get_user_list(next){
+    this.socket.on("userList", res=>next(res));
 }
 }

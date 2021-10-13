@@ -39,8 +39,9 @@ MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true},funct
     {Username: "Jack", Email: "jack@gmail.com", Role: "groupAdmin"}]);
 
     const groups_collection = db.collection("Groups");
-    groups_collection.insertMany([{GroupName: "Group 1", GroupMembers: ["Jack", "Admin"], GroupAdmins: ["Admin"]},
-    {GroupName: "Group 2", GroupMembers: ["Chloe", "Admin"], GroupAdmins: ["Chloe","Admin"]}]);
+    groups_collection.insertMany([
+    {GroupName: "Group 1", GroupMembers: ["Jack", "Admin"], GroupAssist: []},
+    {GroupName: "Group 2", GroupMembers: ["Chloe", "Admin"], GroupAssist: []}]);
 
 
 

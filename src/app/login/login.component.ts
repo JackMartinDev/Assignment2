@@ -29,8 +29,9 @@ export class LoginComponent implements OnInit {
           //localStorage.setItem('email', data.users.email);
           localStorage.setItem('role', data.user.Role);
           localStorage.setItem('loggedIn', 'true');
-
-          this.router.navigateByUrl('/chat');
+          this.router.navigateByUrl('/chat').then(() => {
+            window.location.reload();
+          });
         }else{
           alert("Incorrect login");
         }

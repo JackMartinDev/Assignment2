@@ -12,21 +12,28 @@ module.exports = {
             const db = client.db(dbName);
 
             const collection = db.collection('Groups');
+            const users_collection = db.collection('Users');
 
             var rooms = [];
             var socketRoom = [];
             var socketRoomNum = [];
+            var user = "";
 
             const chat = io.of('/chat');
 
             chat.on('connection',(socket)=>{
 
-                socket.on('start',(m)=>{
+                socket.on('start',(logged_in_user,user_role)=>{
+                    user = logged_in_user;
+                    var array = [];
                     collection.find().toArray((err,data)=>{
                         for(let i =0; i<data.length;i++){
-                            rooms[i] = data[i].GroupName;
+                            if(data[i].GroupMembers.includes(logged_in_user) || user_role == "groupAdmin" || user_role == "superAdmin"){
+                                array.push(data[i].GroupName);
+                            }
                         }
-                        console.log(rooms);
+                        rooms = array;
+                        console.log(user);
                     });
                 });
 
@@ -42,12 +49,22 @@ module.exports = {
                     if(rooms.indexOf(newRoom) == -1){
                         rooms.push(newRoom);
                         chat.emit('roomList', JSON.stringify(rooms));
-                        collection.insertOne({GroupName: newRoom, GroupMembers: [], GroupAdmins: ["Admin"]});
+                        collection.insertOne({GroupName: newRoom, GroupMembers: ["Admin"], GroupAssist: ["Admin"]});
                     }
                 });
 
                 socket.on('roomList',(m)=>{
                     chat.emit('roomList',JSON.stringify(rooms))
+                });
+
+                socket.on('userList',(m)=>{
+                    users_collection.find().toArray((err,data)=>{
+                        users = [];
+                        for(let i = 0; i<data.length;i++){
+                            users[i] = data[i].Username;
+                        }
+                        chat.emit('userList',JSON.stringify(users))
+                    });
                 });
 
                 socket.on('currentUsers',(room)=>{

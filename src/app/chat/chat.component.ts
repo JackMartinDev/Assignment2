@@ -26,19 +26,23 @@ export class ChatComponent implements OnInit {
   isInRoom = false;
   newRoom:string = "";
   userCount:number = 0;
-  users = ["Jack", "Dylan"];
+  users = [];
   selectedRoomAdd:string = "";
   selectedUserAdd:string = "";
+  admin = false;
 
-  constructor(private socketService:SocketService) {}
+  constructor(private socketService:SocketService, private router:Router) {}
 
 
 //On load check priviledges and fetch group data from the server
   ngOnInit() {
+    
     this.socketService.initSocket();
     this.socketService.get_message((m)=>{this.messages.push(m)});
     this.socketService.req_room_list();
     this.socketService.get_room_list((msg)=>{this.rooms =  JSON.parse(msg)});
+    this.socketService.req_user_list();
+    this.socketService.get_user_list((msg)=>{this.users =  JSON.parse(msg)});
     this.socketService.notice((msg)=>{this.roomNotice = msg});
     this.socketService.joined((msg)=>{this.currentRoom = msg
     if(this.currentRoom !=""){
@@ -47,6 +51,13 @@ export class ChatComponent implements OnInit {
       this.isInRoom = false;
     }
   });
+
+  if(localStorage.getItem('role') == 'superAdmin' || localStorage.getItem('role') == 'groupAdmin'){
+    this.admin = true;
+  }
+  if(localStorage.getItem('role') != 'superAdmin' && localStorage.getItem('role') != 'groupAdmin'){
+    this.admin = false;
+  }
 }
 
   join_room(){
