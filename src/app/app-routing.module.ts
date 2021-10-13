@@ -5,13 +5,15 @@ import { ChatComponent } from './chat/chat.component';
 import { AdduserComponent } from './adduser/adduser.component';
 import { DeleteuserComponent } from './deleteuser/deleteuser.component';
 import { UpgradeuserComponent } from './upgradeuser/upgradeuser.component';
+import { PasswordComponent } from './password/password.component';
 
 const routes: Routes = [
   {path:'login',component:LoginComponent},
   {path:'chat',component:ChatComponent},
   {path: 'adduser', component:AdduserComponent},
   {path: 'deleteuser', component:DeleteuserComponent},
-  {path: 'upgradeuser', component:UpgradeuserComponent}
+  {path: 'upgradeuser', component:UpgradeuserComponent},
+  {path: 'password', component:PasswordComponent}
   ];
 
 @NgModule({

@@ -9,30 +9,25 @@ const httpOptions = {
 const BACKEND_URL = 'http://localhost:3000';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: 'app-password',
+  templateUrl: './password.component.html',
+  styleUrls: ['./password.component.css']
 })
 
-export class LoginComponent implements OnInit {
-  userpwd = {username: "", password: ""};
-  constructor(private router:Router, private httpClient: HttpClient) {}
+export class PasswordComponent implements OnInit {
+  pwd = {pass1: "", pass2: "", user: ""};
+  constructor(private router:Router, private httpClient: HttpClient) { }
 
   public buttonClicked(){
-    this.httpClient.post<any>(BACKEND_URL + '/auth', this.userpwd, httpOptions)
+    this.httpClient.post<any>(BACKEND_URL + '/passchange', this.pwd,httpOptions)
     .subscribe({
       next: data => {
         if(data.ok == true){
-          
-          //Add data to local storage
-          localStorage.setItem('username', data.user.Username);
-          localStorage.setItem('role', data.user.Role);
-          localStorage.setItem('loggedIn', 'true');
           this.router.navigateByUrl('/chat').then(() => {
             window.location.reload();
           });
         }else{
-          alert("Incorrect login");
+          alert("Passwords do not match");
         }
     },
     error: error => {
@@ -42,7 +37,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
-   }
+    this.pwd.user = localStorage.getItem("username");
+  }
 
 }

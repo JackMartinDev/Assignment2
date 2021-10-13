@@ -1,16 +1,41 @@
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
   <div class="container-fluid">
-    <ul class="nav navbar-nav">
-     
-      <div *ngIf="LoggedIn; else elseBlock"><li><a class="nav-link" routerLink="/" (click)="logOut()">Logout</a></li></div>
-        <ng-template #elseBlock><li> <a class="nav-link" routerLink="/login">Login</a></li></ng-template>
-      <div *ngIf="LoggedIn"><li> <a class="nav-link" routerLink="/chat">Chat</a></li></div>
-      <div *ngIf="Admin"><li> <a class="nav-link" routerLink="/adduser" (click)="buttonClicked()">Add User</a></li></div>
-      <div *ngIf="Admin"><li> <a class="nav-link" routerLink="/deleteuser" (click)="buttonClicked()">Delete User</a></li></div>
-      <div *ngIf="Admin"><li> <a class="nav-link" routerLink="/upgradeuser" (click)="buttonClicked()">Upgrade User</a></li></div>
-    </ul>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item">
+          </li>
+              <li class="nav-item">
+                <div *ngIf="LoggedIn"><li> <a class="nav-link active" routerLink="/chat">Chat</a></li></div>
+              </li>
+
+              <li class="nav-item">
+                <div *ngIf="LoggedIn; else elseBlock"><li><a class="nav-link active" routerLink="/" (click)="logOut()">Logout</a></li></div>
+                <ng-template #elseBlock><li> <a class="nav-link active" routerLink="/login">Login</a></li></ng-template>
+              </li>
+
+              <li class="nav-item">
+                <div *ngIf="LoggedIn"><li> <a class="nav-link active" routerLink="/password">Change Password</a></li></div>
+              </li>
+
+              <li class="nav-item">
+                <div *ngIf="Admin"><li> <a class="nav-link active" routerLink="/adduser" (click)="buttonClicked()">Add User</a></li></div>
+              </li>
+
+              <li class="nav-item">
+                <div *ngIf="Admin"><li> <a class="nav-link active" routerLink="/deleteuser" (click)="buttonClicked()">Delete User</a></li></div>
+              </li>
+
+              <li class="nav-item">
+                <div *ngIf="Admin"><li> <a class="nav-link active" routerLink="/upgradeuser" (click)="buttonClicked()">Upgrade User</a></li></div>
+              </li>
+          </ul>
+      </div>
   </div>
- </nav>
+</nav>
+
  <div class="container">
  <router-outlet></router-outlet>
  </div>

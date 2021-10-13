@@ -13,7 +13,7 @@ module.exports =  function(db,app){
 
         collection.find({'Username': userName}).count((err,count)=>{
             if (count == 0){
-                collection.insertOne({Username: userName, Email: email, Role: "user"},(err,dbres)=>{
+                collection.insertOne({Username: userName, Email: email, Role: "user", Password: "password"},(err,dbres)=>{
                     res.send({"ok": true});
                 })
             }else{

@@ -9,6 +9,7 @@ import { ChatComponent } from './chat/chat.component';
 import { AdduserComponent } from './adduser/adduser.component';
 import { DeleteuserComponent } from './deleteuser/deleteuser.component';
 import { UpgradeuserComponent } from './upgradeuser/upgradeuser.component';
+import { PasswordComponent } from './password/password.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { UpgradeuserComponent } from './upgradeuser/upgradeuser.component';
     ChatComponent,
     AdduserComponent,
     DeleteuserComponent,
-    UpgradeuserComponent
+    UpgradeuserComponent,
+    PasswordComponent
   ],
   imports: [
     BrowserModule,

@@ -34,9 +34,9 @@ MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true},funct
     const db = client.db(dbName);
 
     const users_collection = db.collection("Users");
-    users_collection.insertMany([{Username: "Admin", Email: "admin@gmail.com", Role: "superAdmin"},
-    {Username: "Chloe", Email: "chloe@gmail.com", Role: "user"},
-    {Username: "Jack", Email: "jack@gmail.com", Role: "groupAdmin"}]);
+    users_collection.insertMany([{Username: "Admin", Email: "admin@gmail.com", Role: "superAdmin", Password: "admin"},
+    {Username: "Chloe", Email: "chloe@gmail.com", Role: "user", Password: "password"},
+    {Username: "Jack", Email: "jack@gmail.com", Role: "groupAdmin", Password: "password"}]);
 
     const groups_collection = db.collection("Groups");
     groups_collection.insertMany([
@@ -46,11 +46,13 @@ MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true},funct
 
 
     require('./router/auth.js')(db,app);
+    require('./router/passchange.js')(db,app);
     require('./router/adduser.js')(db,app);
     require('./router/deleteuser.js')(db,app);
     require('./router/updateuser.js')(db,app);
 
     app.post('/auth', require('./router/auth'));
+    app.post('/passchange', require('./router/passchange'));
     app.post('/adduser', require('./router/adduser'));
     app.post('/deleteuser', require('./router/deleteuser'));
     app.post('/updateuser', require('./router/updateuser'));

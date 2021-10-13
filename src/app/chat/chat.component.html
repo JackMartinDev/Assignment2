@@ -23,14 +23,17 @@
       <button (click) = "create_room()" class="btn btn-primary">Create new room</button>
       </div>
   </form>
-  <h2>Notices</h2>
-  {{roomNotice}}<br>
-  <button (click) = "clear_notice()" class="btn btn-primary">Clear Notice</button><br>
-  <h3>Chat messages for {{currentRoom}} - {{userCount}} Active Users</h3>
+  <div *ngIf="isInRoom">
+    <h2>Notices</h2>
+    {{roomNotice}}<br>
+    <button (click) = "clear_notice()" class="btn btn-primary">Clear Notice</button><br>
+    <h3>Chat messages for {{currentRoom}} - {{userCount}} Active Users</h3>
+  </div>
   <ul>
     <li *ngFor="let message of messages">{{message}}</li>
   </ul>
 
+  <h3>Add user to a group</h3>
   <div *ngIf="admin">
     <select [(ngModel)] = "selectedRoomAdd" name="selectedRoomAdd">
       <option [ngValue]="null">Select Room</option>
