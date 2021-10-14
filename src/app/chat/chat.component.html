@@ -32,9 +32,9 @@
   <ul>
     <li *ngFor="let message of messages">{{message}}</li>
   </ul>
-
-  <h3>Add user to a group</h3>
+  
   <div *ngIf="admin">
+    <h3>Modify group members</h3>
     <select [(ngModel)] = "selectedRoomAdd" name="selectedRoomAdd">
       <option [ngValue]="null">Select Room</option>
       <option *ngFor="let room of rooms">
@@ -50,6 +50,9 @@
     </select><br><br>
     <div class = "form-group">
       <button (click) = "add_user(selectedRoomAdd,selectedUserAdd)" class = "btn btn-primary">Add User to group</button>
+    </div><br>
+    <div class = "form-group">
+      <button (click) = "remove_user(selectedRoomAdd,selectedUserAdd)" class = "btn btn-primary">Remove User from group</button>
     </div>
 </div>
 

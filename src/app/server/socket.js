@@ -33,7 +33,6 @@ module.exports = {
                             }
                         }
                         rooms = array;
-                        console.log(user);
                     });
                 });
 
@@ -49,7 +48,12 @@ module.exports = {
                     if(rooms.indexOf(newRoom) == -1){
                         rooms.push(newRoom);
                         chat.emit('roomList', JSON.stringify(rooms));
-                        collection.insertOne({GroupName: newRoom, GroupMembers: ["Admin"], GroupAssist: ["Admin"]});
+                        var array = ["Admin"];
+                        var index = array.indexOf(user);
+                        if(index == -1){
+                            array.push(user);
+                        }
+                        collection.insertOne({GroupName: newRoom, GroupMembers: array, GroupAssist: ["Admin"]});
                     }
                 });
 
@@ -134,16 +138,25 @@ module.exports = {
                 socket.on('addUser',(room, user)=>{
                     collection.find({GroupName:room}).toArray((err,data)=>{
                         var current_users = data[0].GroupMembers;
-                        console.log(current_users);
-                        current_users.push(user);
-                        console.log(current_users);
-                        collection.updateOne({GroupName: room}, {$set:{GroupMembers: current_users}})
-
+                        var index = current_users.indexOf(user)
+                        if(index == -1){
+                            current_users.push(user);
+                            collection.updateOne({GroupName: room}, {$set:{GroupMembers: current_users}})   
+                        }
                     });
-                    collection.updateOne({GroupName: room}, {$set:{GroupMembers: [user]}},(err,dbres)=>{
-                        console.log("done");
-                    })
                 });
+
+                socket.on('removeUser',(room, user)=>{
+                    collection.find({GroupName:room}).toArray((err,data)=>{
+                        var current_users = data[0].GroupMembers;
+                        var index = current_users.indexOf(user)
+                        if(index != -1){
+                            current_users.splice(index,1);
+                            collection.updateOne({GroupName: room}, {$set:{GroupMembers: current_users}})
+                        }
+                    });
+                });
+                
 
                 socket.on('disconnect',()=>{
                     socket.disconnect()

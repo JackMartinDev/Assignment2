@@ -68,6 +68,10 @@ public add_user(room, user){
     this.socket.emit('addUser',room,user);
 }
 
+public remove_user(room, user){
+    this.socket.emit('removeUser',room,user);
+}
+
 public req_user_list(){
     this.socket.emit("userList", 'list please');
 }

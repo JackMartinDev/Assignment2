@@ -102,4 +102,8 @@ export class ChatComponent implements OnInit {
     this.socketService.add_user(selectedRoomAdd,selectedUserAdd);
   }
 
+  remove_user(selectedRoomAdd,selectedUserAdd){
+    this.socketService.remove_user(selectedRoomAdd,selectedUserAdd);
+  }
+
 }
