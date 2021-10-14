@@ -18,6 +18,7 @@ export class PasswordComponent implements OnInit {
   pwd = {pass1: "", pass2: "", user: ""};
   constructor(private router:Router, private httpClient: HttpClient) { }
 
+  //Post to server on button click
   public buttonClicked(){
     this.httpClient.post<any>(BACKEND_URL + '/passchange', this.pwd,httpOptions)
     .subscribe({
@@ -27,7 +28,7 @@ export class PasswordComponent implements OnInit {
             window.location.reload();
           });
         }else{
-          alert("Passwords do not match");
+          alert(data.error);
         }
     },
     error: error => {

@@ -16,6 +16,9 @@
         {{room}}
       </option>
     </select><br><br>
+    <div *ngIf="admin">
+      <button *ngIf="!isInRoom" (click) = "remove_room()" class = "btn btn-primary">Remove Group </button>&nbsp;
+      </div>
     
     <div *ngIf="admin">
     <label for= "newRoom">New Room</label>

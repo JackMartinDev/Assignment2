@@ -15,9 +15,12 @@ const BACKEND_URL = 'http://localhost:3000';
 })
 
 export class LoginComponent implements OnInit {
+  
   userpwd = {username: "", password: ""};
+
   constructor(private router:Router, private httpClient: HttpClient) {}
 
+  //Post to server on button click
   public buttonClicked(){
     this.httpClient.post<any>(BACKEND_URL + '/auth', this.userpwd, httpOptions)
     .subscribe({
@@ -32,7 +35,8 @@ export class LoginComponent implements OnInit {
             window.location.reload();
           });
         }else{
-          alert("Incorrect login");
+          alert(data.error);
+          
         }
     },
     error: error => {

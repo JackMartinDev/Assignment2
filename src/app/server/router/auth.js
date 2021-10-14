@@ -6,25 +6,26 @@ module.exports =  function(db,app){
             return res.sendStatus(400);
         }
 
+        //Read posted data
         userName = req.body.username;
         password = req.body.password;
 
+        //Connect to db
         const collection = db.collection('Users');
 
+        //Authenticate user 
         collection.find({'Username': userName}).count((err,count)=>{
             if (count != 0){
                 collection.find({'Username': userName}).toArray((err,data)=>{
                     if(data[0].Password == password){
                         res.send({"ok":true, "user":data[0]});
                     }else{
-                        //password wrong
-                        res.send({"ok":false});
+                        res.send({"ok":false, "error": "Incorrect password"});
                     }
                     
                 });
             }else{
-                //user dont exist
-                res.send({"ok":false});
+                res.send({"ok":false, "error": "User does not exist"});
             }
         })
     })

@@ -11,17 +11,22 @@ const SERVER_URL = 'http://localhost:3000/chat';
 export class SocketService{
 
 private socket;
-logged_in_user = localStorage.getItem('username');
-user_role = localStorage.getItem('role');
+
 constructor() {}
 
 public initSocket():void{
     this.socket = io(SERVER_URL);
-    this.socket.emit("start", this.logged_in_user, this.user_role);
+    var logged_in_user = localStorage.getItem('username');
+    var user_role = localStorage.getItem('role');
+    this.socket.emit("start", logged_in_user, user_role);
 }
 
 public join_room(room):void{
     this.socket.emit("joinRoom", room);
+}
+
+public remove_room(room):void{
+    this.socket.emit("removeRoom", room);
 }
 
 public leave_room(room):void{

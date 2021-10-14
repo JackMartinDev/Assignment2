@@ -52,6 +52,7 @@ export class ChatComponent implements OnInit {
     }
   });
 
+  //Update user priviledges
   if(localStorage.getItem('role') == 'superAdmin' || localStorage.getItem('role') == 'groupAdmin'){
     this.admin = true;
   }
@@ -64,6 +65,13 @@ export class ChatComponent implements OnInit {
     this.socketService.join_room(this.selectedRoom);
     this.socketService.req_current_users(this.selectedRoom);
     this.socketService.get_current_users((res)=>{this.userCount = res});
+  }
+
+  remove_room(){
+    this.socketService.remove_room(this.selectedRoom);
+    this.socketService.req_room_list();
+    this.socketService.get_room_list((res)=>{this.rooms = res});
+    window.location.reload();
   }
   
   clear_notice(){

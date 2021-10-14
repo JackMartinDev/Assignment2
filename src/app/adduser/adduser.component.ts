@@ -20,6 +20,7 @@ export class AdduserComponent implements OnInit {
   
   constructor(private router:Router, private httpClient: HttpClient) {}
 
+  //Post to server on button click
   public buttonClicked(){
     this.httpClient.post<any>(BACKEND_URL + '/adduser', this.userInfo, httpOptions)
     .subscribe({

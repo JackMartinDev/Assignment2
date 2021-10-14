@@ -19,12 +19,15 @@ export class DeleteuserComponent implements OnInit {
   
   constructor(private router:Router, private httpClient: HttpClient) {}
 
+  //Post to server on button click
   public buttonClicked(){
     this.httpClient.post<any>(BACKEND_URL + '/deleteuser', this.userInfo, httpOptions)
     .subscribe({
       next: data => {
         if(data.ok == true){
-          alert("User Deleted");
+          this.router.navigateByUrl('/chat').then(() => {
+            window.location.reload();
+          });
         }else{
           alert("User does not exist");
         }

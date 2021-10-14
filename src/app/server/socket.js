@@ -1,6 +1,5 @@
 module.exports = {
     connect: function(io, PORT){
-        //read the DB for rooms
         const MongoClient = require('mongodb').MongoClient;
         const url = 'mongodb://localhost:27017';
 
@@ -8,6 +7,7 @@ module.exports = {
             if (err){
                 return console.log(err)
             }
+
             const dbName = 'DB';
             const db = client.db(dbName);
 
@@ -19,10 +19,13 @@ module.exports = {
             var socketRoomNum = [];
             var user = "";
 
+            //Create namespace
             const chat = io.of('/chat');
 
+            //Connect to the socket
             chat.on('connection',(socket)=>{
 
+                //Fill rooms array with rooms the user can access
                 socket.on('start',(logged_in_user,user_role)=>{
                     user = logged_in_user;
                     var array = [];
@@ -36,6 +39,7 @@ module.exports = {
                     });
                 });
 
+                //Send messages to the client
                 socket.on('message',(message)=>{
                     for(i=0;i<socketRoom.length;i++){
                         if(socketRoom[i][0] == socket.id){
@@ -44,10 +48,12 @@ module.exports = {
                     }
                 })
                 
+                //Create a new room if that room does not already exist
                 socket.on('newRoom',(newRoom)=>{
                     if(rooms.indexOf(newRoom) == -1){
                         rooms.push(newRoom);
                         chat.emit('roomList', JSON.stringify(rooms));
+                        //Modify database
                         var array = ["Admin"];
                         var index = array.indexOf(user);
                         if(index == -1){
@@ -57,10 +63,17 @@ module.exports = {
                     }
                 });
 
+                //Remove room from the database
+                socket.on('removeRoom',(room)=>{
+                    collection.deleteOne({GroupName:room});
+                });
+
+                //Return the room list to the client
                 socket.on('roomList',(m)=>{
                     chat.emit('roomList',JSON.stringify(rooms))
                 });
 
+                //Return a list of all users to the client
                 socket.on('userList',(m)=>{
                     users_collection.find().toArray((err,data)=>{
                         users = [];
@@ -71,6 +84,7 @@ module.exports = {
                     });
                 });
 
+                //Return the current number of users to the client
                 socket.on('currentUsers',(room)=>{
                     var user_count = 0;
 
@@ -82,12 +96,13 @@ module.exports = {
                     chat.in(room).emit('currentUsers',user_count);
                 });
 
+                //Join room
                 socket.on('joinRoom',(room)=>{
                     if(rooms.includes(room)){
                         socket.join(room);
-                            
                             var in_room_socket_array = false;
-
+                
+                            //Keep track of which socket is in which room
                             for(i=0; i<socketRoom.length;i++){
                                 if(socketRoom[i][0] == socket.id){
                                     socketRoom[i][1] = room;
@@ -116,6 +131,7 @@ module.exports = {
                     }
                 });
 
+                //Leave room, remove user from room and lower the user count
                 socket.on("leaveRoom",(room)=>{
                     for(let i=0; i<socketRoom.length;i++){
                         if(socketRoom[i][0] == socket.id){
@@ -135,6 +151,7 @@ module.exports = {
                     }
                 });
 
+                //Add user to group if they are not already in the group
                 socket.on('addUser',(room, user)=>{
                     collection.find({GroupName:room}).toArray((err,data)=>{
                         var current_users = data[0].GroupMembers;
@@ -146,6 +163,7 @@ module.exports = {
                     });
                 });
 
+                //Remove user from the group
                 socket.on('removeUser',(room, user)=>{
                     collection.find({GroupName:room}).toArray((err,data)=>{
                         var current_users = data[0].GroupMembers;
@@ -158,6 +176,7 @@ module.exports = {
                 });
                 
 
+                //Disconnect from the socket
                 socket.on('disconnect',()=>{
                     socket.disconnect()
                     for(let i=0; i<socketRoom.length;i++){

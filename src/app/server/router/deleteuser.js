@@ -6,17 +6,28 @@ module.exports =  function(db,app){
             return res.sendStatus(400);
         }
 
+        //Read Posted data
         userName =req.body.username;
+
+        //Connect to db
         const collection = db.collection('Users');
         const groups_collection = db.collection('Groups');
 
-        //maybe make it so logged in user cant be deleted idk
+        //Remove the user from groups
         groups_collection.update({}, {$pull: {"GroupMembers": { $in: [userName]}}},{multi: true})
         groups_collection.update({}, {$pull: {"GroupAdmins": { $in: [userName]}}},{multi: true})
 
-        collection.deleteOne({Username:userName},(err,dbres)=>{
-            res.send({"ok": true});
-        });
+        //Remove from database if exists
+        collection.find({'Username': userName}).count((err,count)=>{
+            if (count != 0){
+                collection.deleteOne({Username:userName},(err,dbres)=>{
+                    res.send({"ok": true});
+                });
+            }else{
+                res.send({"ok":false});
+            }
+        })
+
 
     })
 }

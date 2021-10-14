@@ -20,15 +20,17 @@ export class UpgradeuserComponent implements OnInit {
   
   constructor(private router:Router, private httpClient: HttpClient) {}
 
+  //Post to server on button click
   public buttonClicked(){
     this.httpClient.post<any>(BACKEND_URL + '/updateuser', this.userInfo, httpOptions)
     .subscribe({
       next: data => {
         if(data.ok == true){
-          alert(data.users.username + "'s role updated to " + data.users.role);
-          this.router.navigateByUrl('/chat');
+            this.router.navigateByUrl('/chat').then(() => {
+              window.location.reload();
+            });
         }else{
-          alert("User does not exist");
+          alert(data.error);
         }
     },
     error: error => {
