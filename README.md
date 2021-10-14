@@ -1,11 +1,11 @@
-# Project title: 3813ICT Assignment 1
+# Project title: 3813ICT Assignment 2
 ## Project Description: Online chat app
 ### Documentation
 **Git organisation**  
-For this assignment, GitHub was utilized as the primary remote repository. Each time a new feature was implemented into the code, it was committed to the local repository with a short message describing the new functionality. At the end of each programming session, all of the commits were then pushed to the main branch of the remote repository at GitHub. 
+For this project, Git was used for version control and the service GitHub was utilized as the primary remote repository. The layout of the repository is set out the same way as the file structure on my computer and a README file is included to provide this documentation and testing information. The approach I took for version control was as “1 feature 1 commit” approach where I would commit my work to git after each function was implemented. At the end of each programming session, all of the commits were then pushed to the main branch of the remote repository at GitHub. 
 
 **Data structures**  
-Two main data structures are used to manage the data for the project. The first is a JSON file named users.json which contains an array of objects to store each user. Each object contains the username, email, id and role of the user. The second is a JSON file named groups.json which contains an array of objects used to store the information about each group. Each objects contain a group name, an array of users in the group, and an array of channels in the group.
+For this project the data structures are managed in a mongo database. This mongo database stores 2 collections which are named “Users“ and ”Groups”. Each document in the users collection is made up of a username, email, role and password which are all stored as strings. Each document in the groups collection is made up of a group name, a group members array and a group assists array. This database is modified by the server according to the functions of the route.
 
 **Angular architecture**  
 All components come from the app module base component. From the app module links are provided to the other components, upgradeuser, login, deleteuser, chat, adduser. These components utilize the httpservice for communication. 
